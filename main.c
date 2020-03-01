@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include "ml6.h"
 #include "display.h"
@@ -21,6 +22,26 @@ int main(int argc, char **argv) {
     parse_file( argv[1], transform, edges, s );
   else
     parse_file( "stdin", transform, edges, s );
+
+  edges = make_translate(1,2,3);
+  print_matrix(edges);
+  printf("\n");
+
+  edges = make_scale(1,2,3);
+  print_matrix(edges);
+  printf("\n");
+
+  edges = make_rotX(1);
+  print_matrix(edges);
+  printf("\n");
+
+  edges = make_rotY(1);
+  print_matrix(edges);
+  printf("\n");
+
+  edges = make_rotZ(1);
+  print_matrix(edges);
+  printf("\n");
 
   free_matrix( edges );
   free_matrix( transform );
