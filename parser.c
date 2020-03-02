@@ -61,8 +61,10 @@ void parse_file ( char * filename,
   char line[256];
   clear_screen(s);
   char * nums;
-  int x0,y0,z0,x1,y1,z1,sx, sy, sz;
+  int x0,y0,z0,x1,y1,z1,sx,sy,sz;
   int l = 0;
+  int m = 0;
+  int r = 0;
   int sc = 0;
   int sv = 0;
   color c;
@@ -112,49 +114,126 @@ void parse_file ( char * filename,
 
       nums = strtok (line," ");
       sx = atoi(nums);
-      // printf ("sx: %s\n",nums);
+      printf ("sx: %s\n",nums);
       nums = strtok (NULL, " ");
 
       sy = atoi(nums);
-      // printf ("sy: %s\n",nums);
+      printf ("sy: %s\n",nums);
       nums = strtok (NULL, " ");
 
       sz = atoi(nums);
-      // printf ("sz: %s\n",nums);
+      printf ("sz: %s\n",nums);
       nums = strtok (NULL, " ");
 
       struct matrix * tmp = make_scale(sx, sy, sz);
-      matrix_mult(transform, tmp);
+      matrix_mult(tmp, transform);
+      print_matrix(transform);
       sc = 0;
+    }
+
+    if (m) {
+      nums = strtok (line," ");
+      x0 = atoi(nums);
+      printf ("mx: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      y0 = atoi(nums);
+      printf ("my: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      z0 = atoi(nums);
+      printf ("mz: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      struct matrix * tmp = make_scale(x0, y0, z0);
+      matrix_mult(tmp, transform);
+      print_matrix(transform);
+      m = 0;
+    }
+
+    // if (r) {
+    //   nums = strtok (line," ");
+    //   printf ("rotating about: %s\n",nums);
+    //   if (strcmp(nums, "x") == 0) {
+    //     nums = strtok (NULL, " ");
+    //     make_rotX(atoi(nums));
+    //   }
+    //   if (strcmp(nums, "y") == 0) {
+    //     nums = strtok (NULL, " ");
+    //     make_rotY(atoi(nums));
+    //   }
+    //   if (strcmp(nums, "z") == 0) {
+    //     nums = strtok (NULL, " ");
+    //     make_rotZ(atoi(nums));
+    //   }
+    //
+    //   struct matrix * tmp = make_scale(x0, y0, z0);
+    //   matrix_mult(tmp, transform);
+    //   print_matrix(transform);
+    //   r = 0;
+    // }
+
+    if (sv) {
+      nums = strtok (line," ");
+      printf("in file: %s\n", nums);
+      clear_screen(s);
+      draw_lines(edges, s, c);
+      display(s);
+      save_extension(s, nums);
+      save_ppm(s, "binary.ppm");
+      save_ppm_ascii(s, "ascii.ppm");
     }
 
     line[strlen(line)-1]='\0';
 
     if (strcmp(line, "line") == 0) {
       l = 1;
-      // printf("next is line\n");
+      printf("it's a line!\n");
     }
 
     if (strcmp(line, "display") == 0) {
+      printf("it's displaying!\n");
       clear_screen(s);
       draw_lines(edges, s, c);
       display(s);
     }
 
     if (strcmp(line, "ident") == 0) {
+      printf("identity!\n");
       ident(transform);
+      print_matrix(transform);
+    }
+
+    if (strcmp(line, "move") == 0) {
+      printf("translating!\n");
+      m = 1;
     }
 
     if (strcmp(line, "scale") == 0) {
-      // printf("scale\n");
+      printf("scaling!\n");
       sc = 1;
     }
 
+    // if (strcmp(line, "rotate") == 0) {
+    //   printf("rotating!\n");
+    //   r = 1;
+    // }
+
     if (strcmp(line, "save") == 0) {
-      // printf("scale\n");
+      printf("saving!\n");
       sv = 1;
     }
 
+    if (strcmp(line, "apply") == 0) {
+      printf("applying!\n");
+      matrix_mult(transform, edges);
+      print_matrix(edges);
+    }
+
+    if (strcmp(line, "quit") == 0) {
+      printf("quitting :( bye bye)\n");
+      break;
+    }
 
 
   }
