@@ -104,17 +104,17 @@ void parse_file ( char * filename,
 
       end = nums;
       sx = strtold (nums, &end);
-      printf ("my: %f\n",sx);
+      // printf ("my: %f\n",sx);
       end = nums;
       sy = strtold(nums, &end);
-      printf ("my: %f\n",sy);
+      // printf ("my: %f\n",sy);
       end = nums;
       sz = strtold(nums, &end);
-      printf ("my: %f\n",sz);
+      // printf ("my: %f\n",sz);
 
       tmp = make_scale(sx, sy, sz);
       matrix_mult(tmp, transform);
-      print_matrix(transform);
+      // print_matrix(transform);
       sc = 0;
     }
 

@@ -23,22 +23,27 @@ int main(int argc, char **argv) {
   else
     parse_file( "stdin", transform, edges, s );
 
+  printf("TESTING TRANSLATE: \n");
   edges = make_translate(1,2,3);
   print_matrix(edges);
   printf("\n");
 
+  printf("TESTING SCALE: \n");
   edges = make_scale(1,2,3);
   print_matrix(edges);
   printf("\n");
 
+  printf("TESTING ROTX: \n");
   edges = make_rotX(1);
   print_matrix(edges);
   printf("\n");
 
+  printf("TESTING ROTY: \n");
   edges = make_rotY(1);
   print_matrix(edges);
   printf("\n");
 
+  printf("TESTING ROTZ: \n");
   edges = make_rotZ(1);
   print_matrix(edges);
   printf("\n");
