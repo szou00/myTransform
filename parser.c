@@ -61,7 +61,8 @@ void parse_file ( char * filename,
   char line[256];
   clear_screen(s);
   char * nums;
-  int x0,y0,z0,x1,y1,z1,sx,sy,sz;
+  char * end;
+  double x0,y0,z0,x1,y1,z1,sx,sy,sz;
   int l = 0;
   int m = 0;
   int r = 0;
@@ -100,16 +101,20 @@ void parse_file ( char * filename,
 
     if (sc) {
       nums = strtok (line," ");
-      sx = atoi(nums);
-      nums = strtok (NULL, " ");
-      sy = atoi(nums);
-      nums = strtok (NULL, " ");
-      sz = atoi(nums);
-      nums = strtok (NULL, " ");
+
+      end = nums;
+      sx = strtold (nums, &end);
+      printf ("my: %f\n",sx);
+      end = nums;
+      sy = strtold(nums, &end);
+      printf ("my: %f\n",sy);
+      end = nums;
+      sz = strtold(nums, &end);
+      printf ("my: %f\n",sz);
 
       tmp = make_scale(sx, sy, sz);
       matrix_mult(tmp, transform);
-      // print_matrix(transform);
+      print_matrix(transform);
       sc = 0;
     }
 
