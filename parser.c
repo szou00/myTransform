@@ -52,23 +52,111 @@ humans use degrees, so the file will contain degrees for rotations,
 be sure to conver those degrees to radians (M_PI is the constant
 for PI)
 ====================*/
-void parse_file ( char * filename, 
-                  struct matrix * transform, 
+void parse_file ( char * filename,
+                  struct matrix * transform,
                   struct matrix * edges,
                   screen s) {
 
   FILE *f;
   char line[256];
   clear_screen(s);
+  char * nums;
+  int x0,y0,z0,x1,y1,z1,sx, sy, sz;
+  int l = 0;
+  int sc = 0;
+  int sv = 0;
+  color c;
+  c.red = 135;
+  c.green = 206;
+  c.blue = 250;
 
-  if ( strcmp(filename, "stdin") == 0 ) 
+  if ( strcmp(filename, "stdin") == 0 )
     f = stdin;
   else
     f = fopen(filename, "r");
-  
+
   while ( fgets(line, 255, f) != NULL ) {
+
+    if (l) {
+      // printf("it's a line\n");
+      nums = strtok (line," ");
+      x0 = atoi(nums);
+      // printf ("x0: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      y0 = atoi(nums);
+      // printf ("y0: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      z0 = atoi(nums);
+      // printf ("z0: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      x1 = atoi(nums);
+      // printf ("x1: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      y1 = atoi(nums);
+      // printf ("y1: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      z1 = atoi(nums);
+      // printf ("z1: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      add_edge(edges, x0, y0, z0, x1, y1, z1);
+      l = 0;
+    }
+
+    if (sc) {
+
+      nums = strtok (line," ");
+      sx = atoi(nums);
+      // printf ("sx: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      sy = atoi(nums);
+      // printf ("sy: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      sz = atoi(nums);
+      // printf ("sz: %s\n",nums);
+      nums = strtok (NULL, " ");
+
+      struct matrix * tmp = make_scale(sx, sy, sz);
+      matrix_mult(transform, tmp);
+      sc = 0;
+    }
+
     line[strlen(line)-1]='\0';
-    printf(":%s:\n",line);
+
+    if (strcmp(line, "line") == 0) {
+      l = 1;
+      // printf("next is line\n");
+    }
+
+    if (strcmp(line, "display") == 0) {
+      clear_screen(s);
+      draw_lines(edges, s, c);
+      display(s);
+    }
+
+    if (strcmp(line, "ident") == 0) {
+      ident(transform);
+    }
+
+    if (strcmp(line, "scale") == 0) {
+      // printf("scale\n");
+      sc = 1;
+    }
+
+    if (strcmp(line, "save") == 0) {
+      // printf("scale\n");
+      sv = 1;
+    }
+
+
+
   }
+
 }
-  
